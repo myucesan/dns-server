@@ -5,6 +5,7 @@ class Server(Enum):
     # IP = "localhost"
     PORT = 53
     MSGSIZE = 512
+    BYTE = 8
 # Size limits (in octet)
 class SizeLimits(Enum):
     LABELS = 64
