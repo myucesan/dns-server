@@ -43,7 +43,6 @@ def parseHeader(data):
 
 
     #   return int(QR+OPCODE+AA+TC+RD, 2).to_bytes(1, byteorder='big')+int(RA+Z+RCODE, 2).to_bytes(1, byteorder='big')
-    print("Binary data header:")
     # return(TransactionID.to_bytes(2, byteorder='big') + Flags.to_bytes(2, byteorder='big') + QuestionCount.to_bytes(2, byteorder='big') + AnswerCount.to_bytes(2, byteorder='big') + NSCOUNT.to_bytes(2, byteorder='big') + ARCOUNT.to_bytes(2, byteorder='big'))
     return bytes(TransactionID, 'utf-8') # TODO: have to complete parse header
 
@@ -58,6 +57,6 @@ def parseQuestion(data):
 while True:
     data, addr = s.recvfrom(Server.MSGSIZE.value)
     # print(parseHeader(data))
-    print(parseQuestion(data))
+    parseQuestion(data)
     # s.sendto(data, addr) 
     # print("RAW DATA: ", data)

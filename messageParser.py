@@ -53,7 +53,8 @@ class Header():
         # print("Bits in Byte 2")
 
         # print("RA = ", flagBytes[1][0])
-        # print("Z = ", flagBytes[1][1] + flagBytes[1][2] + flagBytes[1][3])
+        print("HEEEEYYYYYYY")
+        print("Z = ", flagBytes[1][1] + flagBytes[1][2] + flagBytes[1][3]) # TODO: it says 010 but should become 000
         # print("RCODE = ", flagBytes[1][4] + flagBytes[1][5] + flagBytes[1][6] + flagBytes[1][7])
 
         return(int(flagBytes[0][0]+flagBytes[0][1] + flagBytes[0][2] + flagBytes[0][3] + flagBytes[0][4]+ flagBytes[0][5] + flagBytes[0][6] + flagBytes[0][7], 2).to_bytes(1, byteorder='big') + int(flagBytes[1][0] + flagBytes[1][1] + flagBytes[1][2] + flagBytes[1][3] + flagBytes[1][4] + flagBytes[1][5] + flagBytes[1][6] + flagBytes[1][7], 2).to_bytes(1, byteorder='big'))
@@ -93,7 +94,30 @@ class Header():
         
         return Count
 
+    # TODO: fix for subdomains like subdomain.google.com or government.co.uk
     @staticmethod
     def getQuestionDomain(data):
-        # print(data[0:7])
-        return data[0:]
+        isDomainLengthFound = False
+        lengthDomainName = 0
+        for byte in data:
+            if(byte != 0 and not isDomainLengthFound):
+                lengthDomainName = byte
+                isDomainLengthFound = True
+
+        # Get domain name
+        domainName = b''
+        for bit in range(lengthDomainName):
+           domainName += data[bit + 1: bit + 2]
+        
+        print("The domain extension starts at lengthDomainName (.) + 2 (start extension)")
+        lengthDomainExtension = lengthDomainName + 1 # index for lengthDomainIndex
+        lengthDomainExtension = data[lengthDomainExtension] # now contains the actual length
+        print("Length of domain extension: ", lengthDomainExtension)
+        
+        domainExtension = ''
+        for byte in data[lengthDomainName + 2: lengthDomainName + 2 + lengthDomainExtension]:
+            domainExtension = domainExtension + chr(byte)
+        print(domainExtension)
+
+        print("Domain: ", domainName.decode() + "." + domainExtension)
+            
